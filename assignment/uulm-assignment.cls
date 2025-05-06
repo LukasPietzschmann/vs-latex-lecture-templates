@@ -5,41 +5,44 @@
 \def\@clswrn{\ClassWarning{\@clsname}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                              Options                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{family=assignment,prefix=@}
+
+\DeclareBoolOption{nocolor}
+\DeclareBoolOption{solution}
+\DeclareBoolOption[true]{english}
+\DeclareComplementaryOption{german}{english}
+
+\ProcessKeyvalOptions*
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              Includes                                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[\if@english english\else ngerman\fi]{babel}
 
 \RequirePackage[sfdefault,lining]{FiraSans}
 \RequirePackage[scaled=0.9]{FiraMono}
 \RequirePackage{fouriernc}
 
 \RequirePackage{tikz}
-\usetikzlibrary{tikzmark}
-\def\m#1{\tikzmark{#1}}
 
-\RequirePackage{sansmath}
 \RequirePackage{microtype}
-\RequirePackage[utf8]{inputenc}
-\RequirePackage[inline]{enumitem}
-\RequirePackage{ifthen}
 \RequirePackage{lastpage}
-\RequirePackage{afterpage}
-\RequirePackage[ngerman,english]{babel}
-\RequirePackage{graphicx}
 \RequirePackage{titlesec}
 \RequirePackage{comment}
-\RequirePackage[hidelinks]{hyperref}
+\RequirePackage[normalem]{ulem}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                              Options                                  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage[inline]{enumitem}
 
-\newboolean{nocolor}
-\newboolean{solution}
-\DeclareOption{nocolor}{\setboolean{nocolor}{true}}
-\DeclareOption{solution}{\setboolean{solution}{true}}
-\ProcessOptions*
+\RequirePackage{hyperref}
 
+\input{config/translations.tex}
 \input{config/utils.tex}
+\input{config/uulm-logo.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              Layout                                   %
@@ -64,7 +67,7 @@
 \chead{\@title}
 \ohead{\@date}
 \ifoot{\itshape\@shortsupervisor}
-\ofoot{\def\@linkcolor{.}\itshape Seite \thepage{} / \pageref{LastPage}}
+\ofoot{\def\@linkcolor{.}\itshape\translate{page} \thepage{} / \pageref{LastPage}}
 
 \defpairofpagestyles[scrheadings]{title}{
 	\KOMAoptions{headsepline=false}
@@ -74,17 +77,20 @@
 \pagestyle{scrheadings}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                              Colors                                   %
+%                             Class Colors                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% currently not used
-% \definecolor{uulm}{RGB}{125,154,170}
+\definecolor{uulm}{RGB}{125,154,170}
 \definecolor{uulm-akzent}{rgb}{.663,.635,.553}
 \definecolor{uulm-in}{RGB}{163,38,56}
-\colorlet{uulm-in-link}{uulm-in!30!black}
-\colorlet{uulm-akzent-blend}{black!70!uulm-akzent}
 
-\ifthenelse{\boolean{nocolor}}{\colorlet{uulm-in-link}{black}\colorlet{uulm-akzent-blend}{black}}{}
+\if@nocolor
+	\colorlet{uulm-in-link}{black}
+	\colorlet{uulm-akzent-blend}{black}
+\else
+	\colorlet{uulm-in-link}{uulm-in!30!black}
+	\colorlet{uulm-akzent-blend}{black!70!uulm-akzent}
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                           Create info macros                          %
@@ -110,12 +116,17 @@
 	\\[.5\@ymargin]%
 	\noindent\hspace*{-\@xmargin}%
 	\begin{tikzpicture}
-		\ifthenelse{\boolean{nocolor}}
-			{\colorlet{b1}{white}  \colorlet{b2}{white}}
-			{\colorlet{b1}{uulm-in}\colorlet{b2}{uulm-akzent!50}}
-		\ifthenelse{\boolean{nocolor}}
-			{\colorlet{f1}{black}\colorlet{f2}{black}}
-			{\colorlet{f1}{white}\colorlet{f2}{uulm-akzent-blend}}
+		\if@nocolor
+			\colorlet{b1}{white}
+			\colorlet{b2}{white}
+			\colorlet{f1}{black}
+			\colorlet{f2}{black}
+		\else
+			\colorlet{b1}{uulm-in}
+			\colorlet{b2}{uulm-akzent!50}
+			\colorlet{f1}{white}
+			\colorlet{f2}{uulm-akzent-blend}
+		\fi
 
 		\node[rectangle,draw=b1,fill=b1,minimum width=\paperwidth,minimum height=1.2cm](B1){};
 		\node[anchor=east,xshift=-\@xmargin,align=right,text width=\dimexpr\paperwidth-2\@xmargin\relax,
@@ -127,7 +138,7 @@
 	\end{tikzpicture}%
 	\\[.5\@ymargin]%
 	{\large\bfseries\@assignmenttype~\@assignmentno: \@title}\hfill%
-	{\small Besprechung: \@assignmentdeadline}%
+	{\small\translate{discussion-on}: \@assignmentdeadline}%
 	\par\vskip0.5em minus 0.5em\relax%
 }
 
@@ -168,7 +179,7 @@
 %                              Solution                                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\onsolution#1{\ifthenelse{\boolean{solution}}{#1}{}}
+\def\onsolution#1{\if@solution#1\fi}
 \def\inlinesolution#1{\onsolution{%
 	\rotatebox[origin=c]{0}{\@pen}~#1~\rotatebox[origin=c]{180}{\@pen}%
 }}
@@ -176,7 +187,7 @@
 \def\changemargin{\list{}{\leftmargin\sol@leftmargin}\item[]}
 \let\endchangemargin=\endlist
 \newsavebox{\@solutioncontent}
-\ifthenelse{\boolean{solution}}{\def\sol@leftmargin{1em}
+\if@solution\def\sol@leftmargin{1em}
 	\newenvironment{solution}{\setlist{leftmargin=\sol@leftmargin}%
 		\hfill\break\@ifundefined{beforesolution}{}{\beforesolution}%
 		\begin{samepage}%
@@ -187,7 +198,7 @@
 		\rotatebox[origin=c]{225}{\reflectbox{\@pen}}
 		\end{samepage}\@ifundefined{aftersolution}{}{\aftersolution}\par%
 	}
-}{\excludecomment{solution}}
+\else\excludecomment{solution}\fi
 
-\input{config/uulm-logo.tex}
+\input{config/config.tex}
 \input{config/compat.tex}

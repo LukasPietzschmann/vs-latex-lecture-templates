@@ -1,43 +1,14 @@
-\makeatletter
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[ngerman]{babel}
-\usepackage[strict,style=ngerman]{csquotes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                          Package Configs                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{standalone}
+\microtypesetup{protrusion=true,expansion=true,tracking=true}
 
-\usepackage{import}
-\usepackage{tabularx}
-\usepackage{listings}
-\usepackage{float}
+\hypersetup{hidelinks,colorlinks=true,linkcolor=uulm-in-link,urlcolor=uulm-in-link}
 
-\usepackage{graphicx}
-\usepackage{amssymb}
-\usepackage{amsmath}
-\usepackage{pifont}
-\usepackage{multirow}
-\usepackage{longtable}
-\usepackage{hyperref}
-
-\usepackage{graphicx}
-\usepackage{url}
-
-\usepackage{accsupp}
-\usepackage{lstautogobble}
-
-\usepackage{siunitx}
-\sisetup{mode=match,round-mode=places,round-pad=false,group-minimum-digits=4,group-separator=\,}%
-
-\usepackage[normalem]{ulem}
-
-\hypersetup{colorlinks=true,linkcolor=uulm-in-link,urlcolor=uulm-in-link}
-
-\faculty{Institut für Verteilte Systeme, Institut für Softwaretechnik und Programmiersprachen}
-\course[CCPDP]{Konzepte für nebenläufige, parallele und verteilte Programmierung}
-\semester[SoSe25]{Sommersemester 2025}
-\supervisor[L. Pietzschmann, B. Erb, A. Raschke]{Lukas Pietzschmann, Benjamin Erb, Alexander Raschke}
-
-\assignmenttype{Übungsblatt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                          Additional Colors                            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \definecolor{red}{HTML}{a51d2d}
 \definecolor{green}{HTML}{26a269}
@@ -47,11 +18,22 @@
 \definecolor{darkgray}{HTML}{77767b}
 \definecolor{lightgray}{HTML}{deddda}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                          Common Lengths                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newlength\@linewidth\@linewidth1px
+\newlength\@rounding\@rounding1mm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                               TikZ                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \usetikzlibrary{shapes,arrows,arrows.meta,positioning,backgrounds}
 \tikzset{
-	lw/.style={line width=1px},
+	lw/.style={line width=\@linewidth},
 	lcr/.style={line cap=round},
-	rnd/.style={rounded corners=1mm},
+	rnd/.style={rounded corners=\@rounding},
 	o/.style={remember picture,overlay},
 	squarenode/.style={rectangle, fill=white, draw=black, lw},
 	roundednode/.style={squarenode, rnd},
@@ -91,11 +73,17 @@
 
 \def\node@on@layer{\aftergroup\node@@on@layer}
 
-\lstdefinestyle{java}{
-	language=Java,
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                              Listings                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{listings}
+\RequirePackage{accsupp}
+\RequirePackage{lstautogobble}
+
+\lstdefinestyle{default}{
 	basicstyle=\fontsize{\f@size}{\f@baselineskip}\ttfamily\selectfont,
 	keywordstyle=\bfseries\color{@lst@keyword},
-	morekeywords={enum, String},
 	commentstyle=\itshape\color{darkgray},
 	stringstyle=\itshape\color{darkgray},
 	numbers=left,
@@ -112,19 +100,18 @@
 	numberstyle=\color{gray!70}\scriptsize\@lst@nocopy,
 	backgroundcolor=\color{@lst@background},
 	rulecolor=\color{@lst@rule},
-	framerule=1px,
+	framerule=\@linewidth,
 	frame=single,
 	prebreak=\rlap{\@lst@nocopy{$\hookleftarrow$}},
 	fontadjust=true,
 }
-\lstdefinestyle{javainl}{
-	style=java,
-	language=Java,
+\lstdefinestyle{inl}{
+	style=default,
 	keywordstyle=\color{@lst@keyword},
 	columns=fullflexible,
 }
 \lstdefinestyle{plain}{
-	style=java,
+	style=default,
 	language=,
 	backgroundcolor=\color{white},
 	numbers=none,
@@ -133,27 +120,67 @@
 }
 
 \def\@lst@nocopy#1{\BeginAccSupp{ActualText={}}#1\EndAccSupp{}}
-\ifthenelse{\boolean{nocolor}}{
+\if@nocolor
 	\colorlet{@lst@background}{white}
 	\colorlet{@lst@rule}{black}
 	\colorlet{@lst@keyword}{black}
-}{
+\else
 	\colorlet{@lst@background}{uulm-akzent!5!white}
 	\colorlet{@lst@rule}{@lst@background!70!black}
 	\colorlet{@lst@keyword}{uulm-in-link}
-}
-\lstset{style=java}
+\fi
+\lstset{style=default}
 
 \def\inlineblock#1{\tikz[anchor=base,baseline]\node[inner sep=0.1818em,rnd,fill=gray!15,anchor=base,baseline=] {#1};}
-\newcommand\code[2][java]{\inlineblock{\lstinline[style=javainl,language=#1]|#2|}}
-\newcommand\plaincode[2][java]{\lstinline[style=javainl,language=#1]|#2|}
+\newcommand\code[2][]{\inlineblock{\lstinline[style=inl,language=#1]|#2|}}
+\newcommand\plaincode[2][]{\lstinline[style=inl,language=#1]|#2|}
 \def\codename#1{\textsc{#1}}
 \def\filename#1{\textsl{#1}}
 \def\lstoutput#1{\color{gray!80!black}#1}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                              Lists                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \setlist[itemize,1]{label=$\bullet$}
 \setlist[description]{align=right,labelindent=-1.2ex,font=\normalfont\itshape,labelsep=\dimexpr-\itemindent+1.2ex\relax,leftmargin=0cm}
 
 \newlist{inlenum}{enumerate*}{1}
 \setlist[inlenum]{label=\emph{\roman*)},itemjoin={{, }},itemjoin*={{ und }}}
-\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                            Other Macros                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \link <display> to <url>;
+\def\link #1 to #2;{%
+	\def\reduline{\bgroup\markoverwith{\textcolor{uulm-in-link}{\rule[-0.2ex]{1pt}{0.08pt}}}\ULon}%
+	\reduline{\href{#2}{#1}}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                           Fancy Underlines                            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usetikzlibrary{tikzmark}
+\def\m#1{\tikzmark{#1}}
+
+\tikzset{ul/.style={#1,opacity=0.35,rounded corners=.17ex}}
+% \ul[<y shift>]{<color>}{<start>}{<end>}{<underline name>}
+% <start> and <end> are names created with \m{<name>}
+% <underline name> can later be referenced in tikzpictures and will point to the
+% center of the underline
+% There is also <underline name>_west and <underline name>_east which point to
+% the --- you guessed it --- eastern and western end of the underline
+%
+% This is \m{s}a nice\m{e} example
+% \ul{red}{s}{e}{u}
+% \begin{tikzpicture}[o] % o is relevant for "u" to be accessible
+%     \node at (u) {Hi!};
+% \end{tikzpicture}
+\newcommand\ul[5][0pt]{\begin{tikzpicture}[o]
+	\coordinate(#5_west) at ([yshift=#1-0.2ex]pic cs:#3);
+	\coordinate(#5_east) at ([yshift=#1+0.4ex]pic cs:#4);
+	\fill[ul=#2] (#5_west) rectangle node(#5){} (#5_east);
+\end{tikzpicture}}

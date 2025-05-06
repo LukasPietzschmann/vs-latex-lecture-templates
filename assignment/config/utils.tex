@@ -1,13 +1,10 @@
-\def\link #1 to #2;{%
-	\def\reduline{\bgroup\markoverwith{\textcolor{uulm-in-link}{\rule[-0.2ex]{1pt}{0.08pt}}}\ULon}%
-	\reduline{\href{#2}{#1}}%
-}
-
-\def\isempty#1{\relax\detokenize{#1}\relax}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                       Only internal stuff                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\@ensurehelper#1#2#3{%
 	\expandafter\def\csname @#1\endcsname{#3}%
-	\if\isempty{#2}%
+	\if\relax\detokenize{#2}\relax%
 		\expandafter\def\csname @short#1\endcsname{#3}%
 	\else%
 		\expandafter\def\csname @short#1\endcsname{#2}%
@@ -32,15 +29,8 @@
 	\fi%
 }
 
-\tikzset{ul/.style={#1,opacity=0.35,rounded corners=.17ex}}
-\newcommand\ul[5][0pt]{\begin{tikzpicture}[o]
-	\coordinate(#5_west) at ([yshift=#1-0.2ex]pic cs:#3);
-	\coordinate(#5_east) at ([yshift=#1+0.4ex]pic cs:#4);
-	\fill[ul=#2] (#5_west) rectangle node(#5){} (#5_east);
-\end{tikzpicture}}
-
 \def\pencolor{pencolor} % the macro will be expanded after we set the color
-\ifthenelse{\boolean{nocolor}}{\colorlet{pencolor}{lightgray}}{\definecolor{pencolor}{RGB}{38,162,105}}
+\if@nocolor\colorlet{pencolor}{lightgray}\else\definecolor{pencolor}{RGB}{38,162,105}\fi
 \newsavebox\@penb
 \newcommand\pen@wdth{.8}
 \newcommand\pen@hght{0.3}
