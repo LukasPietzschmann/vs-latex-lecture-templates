@@ -144,6 +144,7 @@
 	\\[.5\@ymargin]%
 	{\large\bfseries\@assignmenttype\if@assignmentno~\@assignmentno\fi: \@title}%
 	\if@deadline{\hfill\small\translate{discussion-on}: \@deadline}\fi%
+	\if@duration{\break\hfill\null\hfill\small\translate{duration}: \@duration}\fi%
 	\par\vskip0.5em minus 0.5em\relax%
 }
 
