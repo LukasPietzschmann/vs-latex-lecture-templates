@@ -144,8 +144,14 @@
 	\end{tikzpicture}%
 	\\[.5\@ymargin]%
 	{\large\bfseries\@assignmenttype\if@assignmentno~\@assignmentno\fi: \@title}%
-	\if@deadline{\hfill\small\translate{discussion-on}: \@deadline}\fi%
-	\if@duration{\break\hfill\null\hfill\small\translate{duration}: \@duration}\fi%
+	\if@deadline\if@duration% deadline & duration
+		\hfill\small\translate{discussion-on}: \@deadline%
+		\break\hfill\null\hfill\small\translate{duration}: \@duration%
+	\else% deadline & !duration
+		\hfill\small\translate{discussion-on}: \@deadline%
+	\fi\else\if@duration% !deadline & duration
+		\hfill\small\translate{duration}: \@duration%
+	\else\fi\fi%
 	\par\vskip0.5em minus 0.5em\relax%
 }
 
