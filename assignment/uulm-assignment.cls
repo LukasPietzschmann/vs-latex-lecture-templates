@@ -153,7 +153,7 @@
 	\def\intocline{}%
 	\addcontentsline{toc}{section}{\arabic{task} - #1}%
 	\let\intocline\undefined%
-	\section*{Aufgabe \arabic{task}\quad\normalfont\normalsize#1}%
+	\section*{\translate{task}~\arabic{task}\quad\normalfont\normalsize#1}%
 }
 \def\@tasks#1{\section*{#1}}
 
