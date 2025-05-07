@@ -3,6 +3,7 @@
 \LoadClass[11pt]{article}
 
 \def\@clswrn{\ClassWarning{\@clsname}}
+\def\@clserr{\ClassError{\@clsname}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              Options                                  %
@@ -65,7 +66,7 @@
 \renewcommand\headfont{\normalfont}
 \ihead{\@shortcourse{} \textbar{} \@shortsemester}
 \chead{\@title}
-\ohead{\@date}
+\ohead{\@publishdate}
 \ifoot{\itshape\@shortsupervisor}
 \ofoot{\def\@linkcolor{.}\itshape\translate{page} \thepage{} / \pageref{LastPage}}
 
@@ -96,13 +97,18 @@
 %                           Create info macros                          %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ensureinfocommand{faculty}
-\ensureinfocommand{course}
-\ensureinfocommand{semester}
-\ensureinfocommand{supervisor}
-\ensureinfocommand{assignmenttype}
-\ensureinfocommand{assignmentdeadline}
-\ensureinfocommand{assignmentno}
+% Required
+\ensureinfo{faculty}
+\ensureinfo{course}
+\ensureinfo{semester}
+\ensureinfo{supervisor}
+\ensureinfo{assignmenttype}
+\ensureinfo{publishdate}
+
+% Optional
+\ensureinfo{assignmentno}
+\ensureinfo{deadline}
+\ensureinfo{duration}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              Title page                               %
@@ -136,8 +142,8 @@
 		font=\normalsize,f2,inner sep=0] at (B2.east){\@faculty{}\par\@supervisor\\[1ex]\@semester};
 	\end{tikzpicture}%
 	\\[.5\@ymargin]%
-	{\large\bfseries\@assignmenttype~\@assignmentno: \@title}\hfill%
-	{\small\translate{discussion-on}: \@assignmentdeadline}%
+	{\large\bfseries\@assignmenttype\if@assignmentno~\@assignmentno\fi: \@title}%
+	\if@deadline{\hfill\small\translate{discussion-on}: \@deadline}\fi%
 	\par\vskip0.5em minus 0.5em\relax%
 }
 
