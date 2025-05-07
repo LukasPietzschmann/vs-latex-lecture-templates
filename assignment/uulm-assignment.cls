@@ -103,7 +103,6 @@
 \ensureinfocommand{assignmenttype}
 \ensureinfocommand{assignmentdeadline}
 \ensureinfocommand{assignmentno}
-\def\deadline{\@assignmentdeadline} % macros for user land :)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              Title page                               %
