@@ -6,6 +6,8 @@
 - **solution**: Compiles the solution version of the document. _default=false_
 - **english**: Use English as the main language. _(default=true)_
 - **german**: Use German as the main language. _default=false_
+- **compat**: If you're migrating from an older version of this class, you might want to
+  set this option to enable environments/macros that have been replaced in this version.
 
 ## Required Information
 

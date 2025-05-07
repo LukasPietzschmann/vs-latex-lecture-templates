@@ -16,6 +16,7 @@
 \DeclareBoolOption{solution}
 \DeclareBoolOption[true]{english}
 \DeclareComplementaryOption{german}{english}
+\DeclareBoolOption{compat}
 
 \ProcessKeyvalOptions*
 
@@ -207,4 +208,4 @@
 \else\excludecomment{solution}\fi
 
 \input{config/config.tex}
-\input{config/compat.tex}
+\if@compat\input{config/compat.tex}\fi
