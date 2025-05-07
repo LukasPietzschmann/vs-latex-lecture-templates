@@ -205,12 +205,13 @@
 \newsavebox{\@solutioncontent}
 \if@solution\def\sol@leftmargin{1em}
 	\newenvironment{solution}{\setlist{leftmargin=\sol@leftmargin}%
+		\setlength{\parskip}{1em}%
 		\hfill\break\@ifundefined{beforesolution}{}{\beforesolution}%
-		\begin{samepage}%
-		\rotatebox[origin=c]{-45}{\@pen}\par%
-		\begin{changemargin}\vspace{-.4\baselineskip}%
+		\begin{samepage}\\[\dimexpr-\baselineskip+.5em\relax]
+		\rotatebox[origin=c]{-45}{\@pen}%
+		\begin{changemargin}\vspace{-.8\baselineskip}%
 	}{
-		\end{changemargin}\vspace{-.5\baselineskip}%
+		\end{changemargin}\vspace{-.8\baselineskip}%
 		\rotatebox[origin=c]{225}{\reflectbox{\@pen}}
 		\end{samepage}\@ifundefined{aftersolution}{}{\aftersolution}\par%
 	}
