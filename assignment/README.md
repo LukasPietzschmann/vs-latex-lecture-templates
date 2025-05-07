@@ -40,6 +40,7 @@
 
 - **task**: Creates a new task
   - `\task{<title>}` is kinda like `\section{<title>}` but with a different style.
+  - To specify points, there's an optional parameter you can use: `\task[4]{<title>}`.
   - There's also a starred version `\task*{<title>}` which doesn't set a task number and
     doesn't add it to the table of contents.
   - For non-mandatory tasks, use `\opttask{<title>}`. There's also a starred version

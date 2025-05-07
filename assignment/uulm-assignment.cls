@@ -155,12 +155,15 @@
 
 \newcounter{task}
 \newcommand\task{\@ifstar{\@tasks}{\@task}}
-\def\@task#1{% starred version
+\newcommand\@task[2][]{
 	\refstepcounter{task}%
 	\def\intocline{}%
-	\addcontentsline{toc}{section}{\arabic{task} - #1}%
+	\addcontentsline{toc}{section}{\arabic{task} - #2}%
 	\let\intocline\undefined%
-	\section*{\translate{task}~\arabic{task}\quad\normalfont\normalsize#1}%
+	\section*{\translate{task}~\arabic{task}\quad\normalfont\normalsize#2%
+	\if\relax\detokenize{#1}\relax\else%
+		\hfill\textit{(#1P)}%
+	\fi}
 }
 \def\@tasks#1{\section*{#1}}
 
